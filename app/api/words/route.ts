@@ -5,24 +5,33 @@ export const dynamic = "force-dynamic";
 const GITHUB_MODELS_URL =
   "https://models.inference.ai.azure.com/chat/completions";
 
-const SYSTEM_PROMPT = `You are a word pair generator for a party game called "Word Imposter."
+const getSystemPrompt = (playedWords: string[]) => `You are a word pair generator for a party game called "Word Imposter."
 Your job is to generate pairs of closely related but distinct words/phrases.
 Rules:
 - Both words must belong to the same general category (body parts, food, tools, places, animals, clothing, etc.)
 - They must be similar enough that players can't immediately tell which word the imposter has
 - They must be different enough that an observant player can eventually spot the imposter
 - Use everyday, well-known words only
+- DO NOT use any of these previously played words or their close variants: ${playedWords.length > 0 ? playedWords.join(", ") : "none"}
 - Great examples: fork/spoon, ankle/wrist, cinnamon/nutmeg, parrot/macaw, kayak/canoe, freckle/mole, curtain/blinds
 - Bad examples (too different): cat/airplane, salt/bicycle
 Return ONLY valid JSON in this exact format, no markdown, no explanation:
 {"normalWord":"word1","imposterWord":"word2","category":"category name","hint":"one short sentence describing the category without naming the words"}`;
 
-export async function GET() {
+export async function POST(request: Request) {
+  let playedWords: string[] = [];
+  try {
+    const body = await request.json();
+    if (Array.isArray(body.playedWords)) {
+      playedWords = body.playedWords;
+    }
+  } catch (e) {}
+
   const apiKey = process.env.GITHUB_TOKEN;
 
   if (!apiKey) {
     console.warn("GITHUB_TOKEN not configured, using fallback pairs");
-    return NextResponse.json(getFallbackPair());
+    return NextResponse.json(getFallbackPair(playedWords));
   }
 
   try {
@@ -37,7 +46,7 @@ export async function GET() {
         messages: [
           {
             role: "system",
-            content: SYSTEM_PROMPT,
+            content: getSystemPrompt(playedWords),
           },
           {
             role: "user",
@@ -56,7 +65,7 @@ export async function GET() {
     if (!response.ok) {
       const err = await response.text();
       console.error("API error:", err);
-      return NextResponse.json(getFallbackPair());
+      return NextResponse.json(getFallbackPair(playedWords));
     }
 
     const data = await response.json();
@@ -67,22 +76,22 @@ export async function GET() {
       parsed = JSON.parse(content);
     } catch (e) {
       console.error("Failed to parse JSON:", content);
-      return NextResponse.json(getFallbackPair());
+      return NextResponse.json(getFallbackPair(playedWords));
     }
 
     // Validate required fields and ensure they are not empty strings
     if (!parsed.normalWord?.trim() || !parsed.imposterWord?.trim() || !parsed.category?.trim()) {
-      return NextResponse.json(getFallbackPair());
+      return NextResponse.json(getFallbackPair(playedWords));
     }
 
     return NextResponse.json(parsed);
   } catch (err) {
     console.error("Error calling API:", err);
-    return NextResponse.json(getFallbackPair());
+    return NextResponse.json(getFallbackPair(playedWords));
   }
 }
 
-function getFallbackPair() {
+function getFallbackPair(playedWords: string[] = []) {
   const fallbacks = [
     {
       normalWord: "Eyelashes",
@@ -181,5 +190,11 @@ function getFallbackPair() {
       hint: "Devices worn to improve eyesight",
     }
   ];
-  return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+
+  const availableFallbacks = fallbacks.filter(
+    (f) => !playedWords.includes(f.normalWord) && !playedWords.includes(f.imposterWord)
+  );
+
+  const pool = availableFallbacks.length > 0 ? availableFallbacks : fallbacks;
+  return pool[Math.floor(Math.random() * pool.length)];
 }

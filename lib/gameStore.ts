@@ -31,6 +31,7 @@ interface GameState {
   players: Player[];
   wordPair: WordPair | null;
   channel: RealtimeChannel | null;
+  playedWords: string[];
 
   // Actions
   joinRoom: (roomCode: string, name: string) => void;
@@ -54,6 +55,7 @@ export const useGameStore = create<GameState>()(
       players: [],
       wordPair: null,
       channel: null,
+      playedWords: [],
 
       joinRoom: (code, name) => {
         // Leave previous room if any
@@ -135,12 +137,21 @@ export const useGameStore = create<GameState>()(
             
             if (me?.isHost) {
               if (changeWordCount >= majority) {
-                // Fetch a new word and reset wantsToChangeWord
-                fetch('/api/words', { cache: 'no-store' }).then(async res => {
+                // Fetch a new word an
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ playedWords: state.playedWords || [] }),
+                  cache: 'no-store' 
+                }).then(async res => {
                   if (!res.ok) throw new Error("API failed");
                   const newWord = await res.json();
                   if (!newWord.normalWord) throw new Error("Invalid word");
                   const resetPlayers = newPlayers.map(p => ({ ...p, wantsToChangeWord: false, readyToVote: false }));
+                  const newState = { 
+                    wordPair: newWord, 
+                    players: resetPlayers,
+                    playedWords: [...(state.playedWords || []), newWord.normalWord, newWord.imposterWord]
+                 angeWord: false, readyToVote: false }));
                   const newState = { wordPair: newWord, players: resetPlayers };
                   channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
                   set((s) => ({ ...s, ...newState }));
@@ -252,7 +263,7 @@ export const useGameStore = create<GameState>()(
   },
 
   startGame: (wordPair) => {
-    const { players, channel } = get();
+    const { players, channel, playedWords } = get();
     if (!channel) return;
 
     const imposterIndex = Math.floor(Math.random() * players.length);
@@ -266,10 +277,13 @@ export const useGameStore = create<GameState>()(
       kicked: false,
     }));
 
+    const newPlayedWords = [...(playedWords || []), wordPair.normalWord, wordPair.imposterWord];
+
     const newState = {
       phase: "discuss" as Phase,
       wordPair,
       players: assignedPlayers,
+      playedWords: newPlayedWords,
     };
 
     channel.send({
@@ -375,7 +389,8 @@ export const useGameStore = create<GameState>()(
     myPlayerId: state.myPlayerId, 
     myName: state.myName,
     phase: state.phase, // we keep the phase so the initial render knows what screen to show
-    wordPair: state.wordPair // keep wordPair too, but we depend on GameState update for true sync
+    wordPair: state.wordPair, // keep wordPair too, but we depend on GameState update for true sync
+    playedWords: state.playedWords, // Persist previously played words to avoid repetition
   }),
 }
 ));

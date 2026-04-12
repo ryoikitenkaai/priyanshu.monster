@@ -40,7 +40,11 @@ export default function SetupScreen({ initialRoom = "" }: { initialRoom?: string
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/words");
+      const res = await fetch("/api/words", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playedWords: useGameStore.getState().playedWords || [] }),
+      });
       if (!res.ok) throw new Error("API error");
       const wordPair = await res.json();
       startGame(wordPair);
