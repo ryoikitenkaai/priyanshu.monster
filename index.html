@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Friends — A Hall of Chaos</title>
+  <meta name="description" content="A gloriously chaotic, pride-powered shrine to three very questionable friends." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script defer src="app.js"></script>
+</head>
+
+<body>
+
+
+
+  <!-- Hero -->
+  <header class="hero-wrap" role="banner">
+    <div class="hero-inner">
+      <p class="hero-chip">certified unhinged · class of forever</p>
+      <h1 class="hero-title" id="hero-title">Lauda Lassan</h1>
+      <p class="hero-subtitle italic-fancy" id="hero-subtitle">
+        Three friends. One timeline. Unlimited roast energy.
+      </p>
+      <div class="hero-actions">
+        <button class="btn btn-rainbow" id="chaos-btn">
+          🎲 Chaos Mode
+        </button>
+        <button class="btn btn-ghost" id="shuffle-btn">
+          🔀 Shuffle All
+        </button>
+        <button class="btn btn-ghost" id="sound-btn" aria-pressed="false">
+          🔇 Sound: Off
+        </button>
+      </div>
+      <p class="surprise-blurb" id="surprise-text">
+        Scroll down and try not to lose your dignity. We lost ours.
+      </p>
+      <div class="scroll-hint" aria-hidden="true">
+        <span>↓ scroll ↓</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Friend Cards Grid -->
+  <main class="main-stage" id="main-content">
+    <h2 class="section-label">The Roster of Legends <span class="emoji-spin">✨</span></h2>
+    <div class="friend-grid" id="friend-grid"></div>
+  </main>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <footer class="site-footer">
+    <p>Made with 🌈 love and zero shame · priyanshu.monster</p>
+  </footer>
+
+  <noscript>
+    <div class="noscript-warning">Enable JavaScript to see the full chaotic glory.</div>
+  </noscript>
+</body>
+
+</html>
