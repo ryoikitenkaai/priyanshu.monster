@@ -2,8 +2,8 @@
 
 :root {
   /* Colors */
-  --bg-primary: #07071a;
-  --bg-secondary: #0d0d2b;
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
   --bg-glass: rgba(255, 255, 255, 0.04);
   --bg-glass-hover: rgba(255, 255, 255, 0.08);
   --bg-glass-strong: rgba(255, 255, 255, 0.1);

@@ -163,22 +163,42 @@ export const useGameStore = create<GameState>()(
             }
           }
 
-          // If in vote phase check for completion
+          // If in vote phase check for completion or early majority
           if (state.phase === "vote") {
             const votesCast = newPlayers.filter(p => Boolean(p.vote)).length;
+            const me = newPlayers.find(p => p.id === state.myPlayerId);
             
-            if (votesCast === newPlayers.length) {
-              const me = newPlayers.find(p => p.id === state.myPlayerId);
+            if (me?.isHost) {
+              const majority = Math.ceil(newPlayers.length / 2);
               
-              if (me?.isHost) {
-                // Tally votes
-                const voteCounts: Record<string, number> = {};
-                newPlayers.forEach(p => {
-                  if (p.vote) {
-                    voteCounts[p.vote] = (voteCounts[p.vote] || 0) + 1;
-                  }
-                });
+              // Tally votes
+              const voteCounts: Record<string, number> = {};
+              newPlayers.forEach(p => {
+                if (p.vote) {
+                  voteCounts[p.vote] = (voteCounts[p.vote] || 0) + 1;
+                }
+              });
 
+              // Check if any player has reached majority
+              let majorityReached = false;
+              let majorityId: string | null = null;
+
+              for (const [suspectId, count] of Object.entries(voteCounts)) {
+                if (count >= majority) {
+                  majorityReached = true;
+                  majorityId = suspectId;
+                  break;
+                }
+              }
+
+              if (majorityReached && majorityId) {
+                // Someone reached majority - kick them and end vote
+                const finalPlayers = newPlayers.map(p => p.id === majorityId ? { ...p, kicked: true } : p);
+                const resultState = { phase: "result" as Phase, players: finalPlayers };
+                channel.send({ type: "broadcast", event: "game_state_update", payload: resultState });
+                return resultState;
+              } else if (votesCast === newPlayers.length) {
+                // Everyone voted but no majority hit (or a tie)
                 let maxVotes = 0;
                 let kickedId: string | null = null;
                 let tie = false;
@@ -200,7 +220,8 @@ export const useGameStore = create<GameState>()(
                   channel.send({ type: "broadcast", event: "game_state_update", payload: voidState });
                   return voidState;
                 } else {
-                  // Someone is kicked
+                  // Someone got the most votes but didn't reach majority (only possible if tie conditions fail, 
+                  // but we catch those. Still safely kick if they somehow won)
                   const finalPlayers = newPlayers.map(p => p.id === kickedId ? { ...p, kicked: true } : p);
                   const resultState = { phase: "result" as Phase, players: finalPlayers };
                   channel.send({ type: "broadcast", event: "game_state_update", payload: resultState });
