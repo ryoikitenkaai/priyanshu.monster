@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 const NVIDIA_API_URL =
   "https://integrate.api.nvidia.com/v1/chat/completions";
 
@@ -135,6 +137,54 @@ function getFallbackPair() {
       category: "Reptiles",
       hint: "Large reptiles that live near water",
     },
+    {
+      normalWord: "Guitar",
+      imposterWord: "Ukulele",
+      category: "Musical Instruments",
+      hint: "Stringed instruments with a fretted fingerboard",
+    },
+    {
+      normalWord: "Bicycle",
+      imposterWord: "Motorcycle",
+      category: "Two-wheeled Vehicles",
+      hint: "Vehicles with exactly two wheels",
+    },
+    {
+      normalWord: "Muffin",
+      imposterWord: "Cupcake",
+      category: "Baked Goods",
+      hint: "Small, individual-sized baked treats",
+    },
+    {
+      normalWord: "Rabbit",
+      imposterWord: "Hare",
+      category: "Mammals",
+      hint: "Small mammals with long ears",
+    },
+    {
+      normalWord: "Tornado",
+      imposterWord: "Hurricane",
+      category: "Natural Disasters",
+      hint: "Violent rotational wind storms",
+    },
+    {
+      normalWord: "Socks",
+      imposterWord: "Stockings",
+      category: "Footwear",
+      hint: "Garments worn directly on the feet",
+    },
+    {
+      normalWord: "Jam",
+      imposterWord: "Jelly",
+      category: "Fruit Preserves",
+      hint: "Sweet fruit spreads for bread",
+    },
+    {
+      normalWord: "Glasses",
+      imposterWord: "Contacts",
+      category: "Vision Aids",
+      hint: "Devices worn to improve eyesight",
+    }
   ];
   return fallbacks[Math.floor(Math.random() * fallbacks.length)];
 }

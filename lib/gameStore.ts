@@ -10,6 +10,7 @@ export interface Player {
   isHost: boolean;
   vote: string | null;     // ID of the person they voted for
   readyToVote: boolean;    // For discussion phase
+  wantsToChangeWord: boolean; // For changing word
   isImposter: boolean;
   kicked: boolean;
 }
@@ -34,6 +35,7 @@ interface GameState {
   joinRoom: (roomCode: string, name: string) => void;
   startGame: (wordPair: WordPair) => void;
   toggleReadyToVote: () => void;
+  toggleChangeWord: () => void;
   castVote: (suspectId: string) => void;
   playAgain: () => void;
   leaveRoom: () => void;
@@ -70,6 +72,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       isHost: false, 
       vote: null,
       readyToVote: false,
+      wantsToChangeWord: false,
       isImposter: false,
       kicked: false,
     };
@@ -113,14 +116,30 @@ export const useGameStore = create<GameState>((set, get) => ({
           // If in talk/discuss phase, check for majority
           if (state.phase === "discuss") {
             const readyCount = newPlayers.filter(p => p.readyToVote).length;
+            const changeWordCount = newPlayers.filter(p => p.wantsToChangeWord).length;
             const majority = Math.ceil(newPlayers.length / 2);
             
             // Host handles the phase change specifically
             const me = newPlayers.find(p => p.id === state.myPlayerId);
-            if (me?.isHost && readyCount >= majority) {
-              const newState = { phase: "vote" as Phase };
-              channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
-              return { players: newPlayers, ...newState }; 
+            
+            if (me?.isHost) {
+              if (changeWordCount >= majority) {
+                // Fetch a new word and reset wantsToChangeWord
+                fetch('/api/words', { cache: 'no-store' }).then(async res => {
+                  const newWord = await res.json();
+                  const resetPlayers = newPlayers.map(p => ({ ...p, wantsToChangeWord: false, readyToVote: false }));
+                  const newState = { wordPair: newWord, players: resetPlayers };
+                  channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
+                  set((s) => ({ ...s, ...newState }));
+                });
+                return { players: newPlayers.map(p => ({ ...p, wantsToChangeWord: false, readyToVote: false })) };
+              }
+              
+              if (readyCount >= majority) {
+                const newState = { phase: "vote" as Phase };
+                channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
+                return { players: newPlayers, ...newState }; 
+              }
             }
           }
 
@@ -156,7 +175,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
                 if (tie || !kickedId) {
                   // Void the vote and return to discuss
-                  const resetPlayers = newPlayers.map(p => ({ ...p, vote: null, readyToVote: false }));
+                  const resetPlayers = newPlayers.map(p => ({ ...p, vote: null, readyToVote: false, wantsToChangeWord: false }));
                   const voidState = { phase: "discuss" as Phase, players: resetPlayers };
                   channel.send({ type: "broadcast", event: "game_state_update", payload: voidState });
                   return voidState;
@@ -200,6 +219,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       ...p,
       isImposter: index === imposterIndex,
       readyToVote: false,
+      wantsToChangeWord: false,
       vote: null,
       kicked: false,
     }));
@@ -237,6 +257,24 @@ export const useGameStore = create<GameState>((set, get) => ({
     set({ players: players.map(p => p.id === myPlayerId ? { ...p, ...updates } : p) });
   },
 
+  toggleChangeWord: () => {
+    const { channel, myPlayerId, players } = get();
+    if (!channel) return;
+
+    const me = players.find(p => p.id === myPlayerId);
+    if (!me) return;
+
+    const updates = { wantsToChangeWord: !me.wantsToChangeWord };
+
+    channel.send({
+      type: "broadcast",
+      event: "player_update",
+      payload: { id: myPlayerId, updates }
+    });
+
+    set({ players: players.map(p => p.id === myPlayerId ? { ...p, ...updates } : p) });
+  },
+
   castVote: (suspectId) => {
     const { channel, myPlayerId, players } = get();
     if (!channel) return;
@@ -260,6 +298,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       ...p,
       isImposter: false,
       readyToVote: false,
+      wantsToChangeWord: false,
       vote: null,
       kicked: false
     }));
