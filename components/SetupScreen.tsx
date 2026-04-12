@@ -11,7 +11,7 @@ export default function SetupScreen({ initialRoom = "" }: { initialRoom?: string
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const { roomCode, players, myName, joinRoom, startGame } = useGameStore();
+  const { roomCode, players, myName, joinRoom, startGame, leaveRoom } = useGameStore();
 
   const handleJoin = () => {
     const pName = nameInput.trim();
@@ -116,6 +116,14 @@ export default function SetupScreen({ initialRoom = "" }: { initialRoom?: string
             <p>Waiting for host to start...</p>
           </div>
         )}
+        
+        <button 
+          className="btn-secondary animate-fadeUp stagger-5" 
+          onClick={leaveRoom}
+          style={{ width: "100%", marginTop: "12px", border: "1px solid var(--accent-red)", color: "var(--accent-red)" }}
+        >
+          Leave Room
+        </button>
       </div>
     );
   }

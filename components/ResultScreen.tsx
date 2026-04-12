@@ -29,7 +29,7 @@ function Confetti() {
 }
 
 export default function ResultScreen() {
-  const { players, wordPair, playAgain, myPlayerId } = useGameStore();
+  const { players, wordPair, playAgain, leaveRoom, myPlayerId } = useGameStore();
 
   const me = players.find((p) => p.id === myPlayerId);
   const imposter = players.find(p => p.isImposter);
@@ -135,7 +135,13 @@ export default function ResultScreen() {
         <div className={`${styles.timerCard} animate-fadeUp stagger-5`} style={{textAlign: "center", padding: 20}}>
             <p>Waiting for host to play again...</p>
         </div>
-      )}
-    </div>
+      )}      
+      <button 
+        className="btn-secondary animate-fadeUp stagger-6" 
+        onClick={leaveRoom}
+        style={{ width: "100%", marginTop: "12px", border: "1px solid var(--accent-red)", color: "var(--accent-red)" }}
+      >
+        Leave Room
+      </button>    </div>
   );
 }

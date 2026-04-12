@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 import { supabase } from "./supabase";
 import { RealtimeChannel } from "@supabase/supabase-js";
 
@@ -43,23 +44,33 @@ interface GameState {
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-export const useGameStore = create<GameState>((set, get) => ({
-  roomCode: "",
-  myPlayerId: "",
-  myName: "",
-  phase: "setup",
-  players: [],
-  wordPair: null,
-  channel: null,
+export const useGameStore = create<GameState>()(
+  persist(
+    (set, get) => ({
+      roomCode: "",
+      myPlayerId: "",
+      myName: "",
+      phase: "setup",
+      players: [],
+      wordPair: null,
+      channel: null,
 
-  joinRoom: (code, name) => {
-    // Leave previous room if any
-    get().channel?.unsubscribe();
+      joinRoom: (code, name) => {
+        // Leave previous room if any
+        get().channel?.unsubscribe();
 
-    const roomCode = code.toUpperCase();
-    const myPlayerId = generateId();
+        const roomCode = code.toUpperCase();
+        // If we are re-joining the same room and same name, reuse the generated ID
+        const currentMyPlayerId = get().myPlayerId;
+        const currentMyName = get().myName;
+        const currentRoomCode = get().roomCode;
+        
+        let myPlayerId = generateId();
+        if (currentMyPlayerId && currentMyName === name && currentRoomCode === roomCode) {
+          myPlayerId = currentMyPlayerId;
+        }
 
-    const channel = supabase.channel(`room:${roomCode}`, {
+        const channel = supabase.channel(`room:${roomCode}`, {
       config: {
         broadcast: { self: true },
         presence: { key: myPlayerId },
@@ -325,4 +336,15 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
     set({ roomCode: "", myPlayerId: "", myName: "", players: [], phase: "setup", channel: null, wordPair: null });
   }
-}));
+}),
+{
+  name: 'word-imposter-storage',
+  partialize: (state) => ({ 
+    roomCode: state.roomCode, 
+    myPlayerId: state.myPlayerId, 
+    myName: state.myName,
+    phase: state.phase, // we keep the phase so the initial render knows what screen to show
+    wordPair: state.wordPair // keep wordPair too, but we depend on GameState update for true sync
+  }),
+}
+));
