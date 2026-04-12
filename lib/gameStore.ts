@@ -137,9 +137,18 @@ export const useGameStore = create<GameState>()(
               if (changeWordCount >= majority) {
                 // Fetch a new word and reset wantsToChangeWord
                 fetch('/api/words', { cache: 'no-store' }).then(async res => {
+                  if (!res.ok) throw new Error("API failed");
                   const newWord = await res.json();
+                  if (!newWord.normalWord) throw new Error("Invalid word");
                   const resetPlayers = newPlayers.map(p => ({ ...p, wantsToChangeWord: false, readyToVote: false }));
                   const newState = { wordPair: newWord, players: resetPlayers };
+                  channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
+                  set((s) => ({ ...s, ...newState }));
+                }).catch((err) => {
+                  console.error("Change word failed:", err);
+                  // Just reset flags if fetch outright fails so players aren't stuck
+                  const resetPlayers = newPlayers.map(p => ({ ...p, wantsToChangeWord: false, readyToVote: false }));
+                  const newState = { players: resetPlayers };
                   channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
                   set((s) => ({ ...s, ...newState }));
                 });
