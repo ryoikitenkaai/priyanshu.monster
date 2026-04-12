@@ -391,6 +391,7 @@ export const useGameStore = create<GameState>()(
     phase: state.phase, // we keep the phase so the initial render knows what screen to show
     wordPair: state.wordPair, // keep wordPair too, but we depend on GameState update for true sync
     playedWords: state.playedWords, // Persist previously played words to avoid repetition
+    players: state.players, // Persist players so imposter state and session isn't lost on reload
   }),
 }
 ));

@@ -6,15 +6,17 @@ const GITHUB_MODELS_URL =
   "https://models.inference.ai.azure.com/chat/completions";
 
 const getSystemPrompt = (playedWords: string[]) => `You are a word pair generator for a party game called "Word Imposter."
-Your job is to generate pairs of closely related but distinct words/phrases.
+Your job is to generate pairs of related but distinct words/phrases.
+
 Rules:
-- Both words must belong to the same general category (body parts, food, tools, places, animals, clothing, etc.)
-- They must be similar enough that players can't immediately tell which word the imposter has
-- They must be different enough that an observant player can eventually spot the imposter
-- Use everyday, well-known words only
-- DO NOT use any of these previously played words or their close variants: ${playedWords.length > 0 ? playedWords.join(", ") : "none"}
-- Great examples: fork/spoon, ankle/wrist, cinnamon/nutmeg, parrot/macaw, kayak/canoe, freckle/mole, curtain/blinds
-- Bad examples (too different): cat/airplane, salt/bicycle
+1. The two words should share a broad category but be functionally DIFFERENT to increase fun.
+2. DO NOT make them too similar (e.g., eyelash/eyelid or kayak/canoe is BAD because the imposter can easily guess).
+3. The imposter word should be a slightly off-topic variation to throw them off. 
+   - Good Examples: Laptop / Typewriter, Coffee / Hot Sauce, Guitar / Drum Set, Helicopter / Parachute.
+4. Use everyday, well-known words only.
+5. STRICT AVOIDANCE: You absolutely MUST NOT generate any of the following previously played words OR their synonyms. 
+   Played Words to Avoid: [${playedWords.length > 0 ? playedWords.join(", ") : "none"}]
+
 Return ONLY valid JSON in this exact format, no markdown, no explanation:
 {"normalWord":"word1","imposterWord":"word2","category":"category name","hint":"one short sentence describing the category without naming the words"}`;
 
@@ -54,7 +56,7 @@ export async function POST(request: Request) {
               "Generate a fresh word pair for the Word Imposter game. Be creative and pick from a random category.",
           },
         ],
-        temperature: 0.8,
+        temperature: 0.9,
         top_p: 0.9,
         max_tokens: 200,
         response_format: { type: "json_object" },
@@ -94,100 +96,88 @@ export async function POST(request: Request) {
 function getFallbackPair(playedWords: string[] = []) {
   const fallbacks = [
     {
-      normalWord: "Eyelashes",
-      imposterWord: "Eyebrows",
-      category: "Facial Features",
-      hint: "Small features found on the human face",
+      normalWord: "Coffee",
+      imposterWord: "Hot Sauce",
+      category: "Consumable Liquids",
+      hint: "Something bold and stimulating to drink or eat",
     },
     {
-      normalWord: "Fork",
-      imposterWord: "Spoon",
-      category: "Cutlery",
-      hint: "Utensils used for eating",
-    },
-    {
-      normalWord: "Ankle",
-      imposterWord: "Wrist",
-      category: "Body Joints",
-      hint: "Joints that connect limbs to extremities",
-    },
-    {
-      normalWord: "Cinnamon",
-      imposterWord: "Nutmeg",
-      category: "Spices",
-      hint: "Common cooking spices with warm flavors",
-    },
-    {
-      normalWord: "Kayak",
-      imposterWord: "Canoe",
-      category: "Watercraft",
-      hint: "Small human-powered boats",
-    },
-    {
-      normalWord: "Freckle",
-      imposterWord: "Mole",
-      category: "Skin Marks",
-      hint: "Small natural marks on the skin",
-    },
-    {
-      normalWord: "Curtain",
-      imposterWord: "Blinds",
-      category: "Window Coverings",
-      hint: "Things that cover windows",
-    },
-    {
-      normalWord: "Alligator",
-      imposterWord: "Crocodile",
-      category: "Reptiles",
-      hint: "Large reptiles that live near water",
-    },
-    {
-      normalWord: "Guitar",
-      imposterWord: "Ukulele",
-      category: "Musical Instruments",
-      hint: "Stringed instruments with a fretted fingerboard",
+      normalWord: "Laptop",
+      imposterWord: "Typewriter",
+      category: "Writing Tools",
+      hint: "Devices with a keyboard for making text",
     },
     {
       normalWord: "Bicycle",
-      imposterWord: "Motorcycle",
-      category: "Two-wheeled Vehicles",
-      hint: "Vehicles with exactly two wheels",
+      imposterWord: "Unicycle",
+      category: "Wheeled Transport",
+      hint: "Vehicles without an engine that use pedals",
     },
     {
-      normalWord: "Muffin",
-      imposterWord: "Cupcake",
-      category: "Baked Goods",
-      hint: "Small, individual-sized baked treats",
+      normalWord: "Guitar",
+      imposterWord: "Drum Set",
+      category: "Musical Instruments",
+      hint: "Equipment used to create rhythm or melody",
     },
     {
-      normalWord: "Rabbit",
-      imposterWord: "Hare",
-      category: "Mammals",
-      hint: "Small mammals with long ears",
+      normalWord: "Sword",
+      imposterWord: "Shield",
+      category: "Medieval Armament",
+      hint: "Tools used by knights in battle",
     },
     {
-      normalWord: "Tornado",
-      imposterWord: "Hurricane",
-      category: "Natural Disasters",
-      hint: "Violent rotational wind storms",
+      normalWord: "Helicopter",
+      imposterWord: "Parachute",
+      category: "Aerial Equipment",
+      hint: "Things used to navigate through the sky",
     },
     {
-      normalWord: "Socks",
-      imposterWord: "Stockings",
-      category: "Footwear",
-      hint: "Garments worn directly on the feet",
+      normalWord: "Microwave",
+      imposterWord: "Toaster",
+      category: "Kitchen Appliances",
+      hint: "Small machines that heat up food quickly",
     },
     {
-      normalWord: "Jam",
-      imposterWord: "Jelly",
-      category: "Fruit Preserves",
-      hint: "Sweet fruit spreads for bread",
+      normalWord: "Submarine",
+      imposterWord: "Hot Air Balloon",
+      category: "Vehicles",
+      hint: "Things that go up or down to transport people",
     },
     {
-      normalWord: "Glasses",
-      imposterWord: "Contacts",
-      category: "Vision Aids",
-      hint: "Devices worn to improve eyesight",
+      normalWord: "Oven",
+      imposterWord: "Campfire",
+      category: "Cooking Methods",
+      hint: "Ways to cook food with high heat",
+    },
+    {
+      normalWord: "Television",
+      imposterWord: "Projector",
+      category: "Display Devices",
+      hint: "Machines used to watch movies and shows",
+    },
+    {
+      normalWord: "Ice Cream",
+      imposterWord: "Popsicle",
+      category: "Frozen Desserts",
+      hint: "Sweet treats served very cold",
+    },
+    {
+      normalWord: "Elevator",
+      imposterWord: "Escalator",
+      category: "Building Transport",
+      hint: "Mechanisms to avoid taking the stairs",
+    },
+    {
+      normalWord: "Refrigerator",
+      imposterWord: "Cooler",
+      category: "Cold Storage",
+      hint: "Containers meant to keep items chilled",
+    },
+    {
+      normalWord: "Backpack",
+      imposterWord: "Suitcase",
+      category: "Storage Bags",
+      hint: "Things used to carry items while traveling",
     }
   ];
 
