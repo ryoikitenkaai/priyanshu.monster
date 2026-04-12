@@ -1,0 +1,139 @@
+.container {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px 40px;
+  max-width: 480px;
+  margin: 0 auto;
+  gap: 24px;
+}
+
+.header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.title {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  max-width: 300px;
+}
+
+.timerWrap {
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+.timerSvg {
+  width: 100%;
+  height: 100%;
+}
+
+.timerText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.timeDisplay {
+  font-family: "Outfit", sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  transition: color 0.3s;
+}
+
+.urgent {
+  color: var(--accent-red);
+  animation: pulse-ring 0.8s ease-in-out infinite;
+}
+
+.timeUpLabel {
+  font-size: 0.8rem;
+  color: var(--accent-red);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hintCard {
+  width: 100%;
+  padding: 16px 20px;
+  text-align: center;
+}
+
+.hintLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.hintText {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.playersWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+}
+
+.playerChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 999px;
+}
+
+.playerAv {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.playerChip span {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.controls {
+  width: 100%;
+}
+
+.btnRow {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
