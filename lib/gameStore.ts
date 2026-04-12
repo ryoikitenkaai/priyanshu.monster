@@ -210,14 +210,15 @@ export const useGameStore = create<GameState>()(
         }
       });
 
-    set({ 
+    set((state) => ({ 
       roomCode, 
       myPlayerId, 
       myName: name,
       channel, 
       players: [newPlayer],
-      phase: "setup"
-    });
+      // We do NOT overwrite phase if we are reconnecting to a game already in progress
+      phase: state.phase === "result" ? "setup" : state.phase
+    }));
   },
 
   startGame: (wordPair) => {

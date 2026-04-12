@@ -21,10 +21,8 @@ export async function GET() {
   const apiKey = process.env.NVIDIA_API_KEY;
 
   if (!apiKey) {
-    return NextResponse.json(
-      { error: "NVIDIA_API_KEY not configured" },
-      { status: 500 }
-    );
+    console.warn("NVIDIA_API_KEY not configured, using fallback pairs");
+    return NextResponse.json(getFallbackPair());
   }
 
   try {
@@ -57,10 +55,7 @@ export async function GET() {
     if (!response.ok) {
       const err = await response.text();
       console.error("NVIDIA API error:", err);
-      return NextResponse.json(
-        { error: "Failed to generate words" },
-        { status: 502 }
-      );
+      return NextResponse.json(getFallbackPair());
     }
 
     const data = await response.json();
