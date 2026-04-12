@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-const NVIDIA_API_URL =
-  "https://integrate.api.nvidia.com/v1/chat/completions";
+const GITHUB_MODELS_URL =
+  "https://models.inference.ai.azure.com/chat/completions";
 
 const SYSTEM_PROMPT = `You are a word pair generator for a party game called "Word Imposter."
 Your job is to generate pairs of closely related but distinct words/phrases.
@@ -12,28 +12,28 @@ Rules:
 - They must be similar enough that players can't immediately tell which word the imposter has
 - They must be different enough that an observant player can eventually spot the imposter
 - Use everyday, well-known words only
-- Great examples: eyelashes/eyebrows, fork/spoon, ankle/wrist, cinnamon/nutmeg, parrot/macaw, kayak/canoe, freckle/mole, curtain/blinds
+- Great examples: fork/spoon, ankle/wrist, cinnamon/nutmeg, parrot/macaw, kayak/canoe, freckle/mole, curtain/blinds
 - Bad examples (too different): cat/airplane, salt/bicycle
 Return ONLY valid JSON in this exact format, no markdown, no explanation:
 {"normalWord":"word1","imposterWord":"word2","category":"category name","hint":"one short sentence describing the category without naming the words"}`;
 
 export async function GET() {
-  const apiKey = process.env.NVIDIA_API_KEY;
+  const apiKey = process.env.GITHUB_TOKEN;
 
   if (!apiKey) {
-    console.warn("NVIDIA_API_KEY not configured, using fallback pairs");
+    console.warn("GITHUB_TOKEN not configured, using fallback pairs");
     return NextResponse.json(getFallbackPair());
   }
 
   try {
-    const response = await fetch(NVIDIA_API_URL, {
+    const response = await fetch(GITHUB_MODELS_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "meta/llama-3.3-70b-instruct",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
@@ -42,42 +42,42 @@ export async function GET() {
           {
             role: "user",
             content:
-              "Generate a fresh word pair for the Word Imposter game. Make sure the words are different from common ones like eyelashes/eyebrows. Be creative and pick from a random category.",
+              "Generate a fresh word pair for the Word Imposter game. Be creative and pick from a random category.",
           },
         ],
-        temperature: 1.1,
+        temperature: 0.8,
         top_p: 0.9,
         max_tokens: 200,
+        response_format: { type: "json_object" },
         stream: false,
       }),
     });
 
     if (!response.ok) {
       const err = await response.text();
-      console.error("NVIDIA API error:", err);
+      console.error("API error:", err);
       return NextResponse.json(getFallbackPair());
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content ?? "";
+    const content = data.choices?.[0]?.message?.content ?? "{}";
 
-    // Extract JSON from the response
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      console.error("No JSON found in response:", content);
+    let parsed;
+    try {
+      parsed = JSON.parse(content);
+    } catch (e) {
+      console.error("Failed to parse JSON:", content);
       return NextResponse.json(getFallbackPair());
     }
 
-    const parsed = JSON.parse(jsonMatch[0]);
-
-    // Validate required fields
-    if (!parsed.normalWord || !parsed.imposterWord || !parsed.category) {
+    // Validate required fields and ensure they are not empty strings
+    if (!parsed.normalWord?.trim() || !parsed.imposterWord?.trim() || !parsed.category?.trim()) {
       return NextResponse.json(getFallbackPair());
     }
 
     return NextResponse.json(parsed);
   } catch (err) {
-    console.error("Error calling NVIDIA API:", err);
+    console.error("Error calling API:", err);
     return NextResponse.json(getFallbackPair());
   }
 }

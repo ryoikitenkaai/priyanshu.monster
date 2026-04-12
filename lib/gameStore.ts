@@ -146,13 +146,13 @@ export const useGameStore = create<GameState>()(
                   set((s) => ({ ...s, ...newState }));
                 }).catch((err) => {
                   console.error("Change word failed:", err);
-                  // Just reset flags if fetch outright fails so players aren't stuck
+                  // Just reset flags if fetch outright fails so players aren't stuck and they keep the old word
                   const resetPlayers = newPlayers.map(p => ({ ...p, wantsToChangeWord: false, readyToVote: false }));
-                  const newState = { players: resetPlayers };
+                  const newState = { players: resetPlayers, wordPair: state.wordPair }; // Always keep old wordPair on failure
                   channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
                   set((s) => ({ ...s, ...newState }));
                 });
-                return { players: newPlayers.map(p => ({ ...p, wantsToChangeWord: false, readyToVote: false })) };
+                return { players: newPlayers.map(p => ({ ...p, wantsToChangeWord: false, readyToVote: false })), wordPair: state.wordPair }; // Maintain word pair optimistically
               }
               
               if (readyCount >= majority) {
