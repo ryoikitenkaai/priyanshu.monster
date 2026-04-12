@@ -219,7 +219,7 @@ function createCard(friend) {
       (src, index) => `
       <figure class="slide" aria-hidden="${index === 0 ? "false" : "true"}">
         <img
-          src="${src}"
+          src="/ll/${src}"
           alt="${friend.name} slide ${index + 1}"
           loading="${index === 0 ? "eager" : "lazy"}"
           fetchpriority="${index === 0 ? "high" : "auto"}"
