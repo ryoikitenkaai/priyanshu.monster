@@ -191,17 +191,27 @@ export const useGameStore = create<GameState>()(
                       readyToVote: false,
                     }));
 
-                    const newWord = get().popWordPair();
-                    const newState = {
-                      wordPair: newWord,
-                      players: resetPlayers,
-                      playedWords: withUniquePlayedWords(state.playedWords || [], [
-                        newWord.normalWord,
-                        newWord.imposterWord,
-                      ]),
-                    };
-                    channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
-                    set((s) => ({ ...s, ...newState }));
+                    try {
+                      const newWord = get().popWordPair();
+                      const newState = {
+                        wordPair: newWord,
+                        players: resetPlayers,
+                        playedWords: withUniquePlayedWords(state.playedWords || [], [
+                          newWord.normalWord,
+                          newWord.imposterWord,
+                        ]),
+                      };
+                      channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
+                      set((s) => ({ ...s, ...newState }));
+                    } catch {
+                      // If it runs out, just reset their changeWord attempt
+                      channel.send({ 
+                        type: "broadcast", 
+                        event: "game_state_update", 
+                        payload: { players: resetPlayers }
+                      });
+                      set((s) => ({ ...s, players: resetPlayers }));
+                    }
 
                     return { players: resetPlayers };
                   }
@@ -425,7 +435,7 @@ export const useGameStore = create<GameState>()(
       },
       popWordPair: () => {
         const state = get();
-        let stack = [...state.wordStack];
+        const stack = [...state.wordStack];
         let popped: WordPair | undefined;
         
         while (stack.length > 0) {
