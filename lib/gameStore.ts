@@ -2,6 +2,7 @@ import { RealtimeChannel } from "@supabase/supabase-js";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { supabase } from "./supabase";
+import { WORD_PAIRS } from "./words";
 
 export type Phase = "setup" | "discuss" | "vote" | "result";
 
@@ -19,8 +20,6 @@ export interface Player {
 export interface WordPair {
   normalWord: string;
   imposterWord: string;
-  category: string;
-  hint: string;
 }
 
 interface GameState {
@@ -32,6 +31,7 @@ interface GameState {
   wordPair: WordPair | null;
   channel: RealtimeChannel | null;
   playedWords: string[];
+  wordStack: WordPair[];
   joinRoom: (roomCode: string, name: string) => void;
   startGame: (wordPair: WordPair) => void;
   toggleReadyToVote: () => void;
@@ -39,6 +39,7 @@ interface GameState {
   castVote: (suspectId: string) => void;
   playAgain: () => void;
   leaveRoom: () => void;
+  popWordPair: () => WordPair;
 }
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
@@ -60,32 +61,6 @@ const withUniquePlayedWords = (playedWords: string[], nextWords: string[]) => {
   return out;
 };
 
-const isFreshPair = (pair: WordPair, playedWords: string[]) => {
-  const seen = new Set(playedWords.map(normalizeWord));
-  return !seen.has(normalizeWord(pair.normalWord)) && !seen.has(normalizeWord(pair.imposterWord));
-};
-
-const requestFreshWordPair = async (playedWords: string[], maxAttempts = 4): Promise<WordPair> => {
-  for (let i = 0; i < maxAttempts; i += 1) {
-    const res = await fetch("/api/words", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ playedWords }),
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      continue;
-    }
-
-    const data = (await res.json()) as WordPair;
-    if (data?.normalWord && data?.imposterWord && isFreshPair(data, playedWords)) {
-      return data;
-    }
-  }
-
-  throw new Error("Could not get a fresh word pair");
-};
-
 export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
@@ -97,6 +72,7 @@ export const useGameStore = create<GameState>()(
       wordPair: null,
       channel: null,
       playedWords: [],
+      wordStack: [...WORD_PAIRS].sort(() => Math.random() - 0.5),
 
       joinRoom: (code, name) => {
         get().channel?.unsubscribe();
@@ -199,30 +175,17 @@ export const useGameStore = create<GameState>()(
                       readyToVote: false,
                     }));
 
-                    requestFreshWordPair(state.playedWords || [])
-                      .then((newWord) => {
-                        const newState = {
-                          wordPair: newWord,
-                          players: resetPlayers,
-                          playedWords: withUniquePlayedWords(state.playedWords || [], [
-                            newWord.normalWord,
-                            newWord.imposterWord,
-                          ]),
-                        };
-                        channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
-                        set((s) => ({ ...s, ...newState }));
-                      })
-                      .catch(() => {
-                        const fallbackState = {
-                          players: resetPlayers,
-                        };
-                        channel.send({
-                          type: "broadcast",
-                          event: "game_state_update",
-                          payload: fallbackState,
-                        });
-                        set((s) => ({ ...s, ...fallbackState }));
-                      });
+                    const newWord = get().popWordPair();
+                    const newState = {
+                      wordPair: newWord,
+                      players: resetPlayers,
+                      playedWords: withUniquePlayedWords(state.playedWords || [], [
+                        newWord.normalWord,
+                        newWord.imposterWord,
+                      ]),
+                    };
+                    channel.send({ type: "broadcast", event: "game_state_update", payload: newState });
+                    set((s) => ({ ...s, ...newState }));
 
                     return { players: resetPlayers };
                   }
@@ -444,6 +407,33 @@ export const useGameStore = create<GameState>()(
           wordPair: null,
         });
       },
+      popWordPair: () => {
+        const state = get();
+        let stack = [...state.wordStack];
+        let popped: WordPair | undefined;
+        
+        while (stack.length > 0) {
+          popped = stack.pop()!;
+          const normalKey = normalizeWord(popped.normalWord);
+          const impKey = normalizeWord(popped.imposterWord);
+          const seen = new Set((state.playedWords || []).map(normalizeWord));
+          
+          if (!seen.has(normalKey) && !seen.has(impKey)) {
+            break;
+          }
+          popped = undefined;
+        }
+
+        if (!popped) {
+          // If we ran out of unique words, just restart and pick a random one
+          stack = [...WORD_PAIRS];
+          stack.sort(() => Math.random() - 0.5);
+          popped = stack.pop()!;
+        }
+
+        set({ wordStack: stack });
+        return popped;
+      },
     }),
     {
       name: "word-imposter-storage",
@@ -454,6 +444,7 @@ export const useGameStore = create<GameState>()(
         phase: state.phase,
         wordPair: state.wordPair,
         playedWords: state.playedWords,
+        wordStack: state.wordStack,
         players: state.players,
       }),
     },

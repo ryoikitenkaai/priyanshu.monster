@@ -115,13 +115,6 @@ export default function ResultScreen() {
         </div>
       </div>
 
-      {/* Category */}
-      <div className={`${styles.categoryChip} animate-fadeUp stagger-4`}>
-        <span className="badge badge-purple">
-          📂 {wordPair?.category}
-        </span>
-      </div>
-
       {/* Play again */}
       {me?.isHost ? (
         <button

@@ -30,11 +30,6 @@ export default function DiscussScreen() {
         {me?.isImposter && <p style={{color: 'var(--accent-red)', fontSize: '0.9rem'}}>You are the imposter! Try to blend in.</p>}
       </div>
 
-      <div className={`glass-card ${styles.hintCard} animate-fadeUp stagger-3`}>
-        <p className={styles.hintLabel}>💡 Category Hint</p>
-        <p className={styles.hintText}>{wordPair?.hint}</p>
-      </div>
-
       <div className={`${styles.playersWrap} animate-fadeUp stagger-3`}>
         {players.map((p) => (
           <div key={p.id} className={`glass-card ${styles.playerChip}`} style={{ borderColor: p.readyToVote ? 'var(--accent-green)' : (p.wantsToChangeWord ? 'var(--accent-orange)' : 'transparent') }}>

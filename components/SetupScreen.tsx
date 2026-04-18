@@ -40,21 +40,13 @@ export default function SetupScreen({ initialRoom = "" }: { initialRoom?: string
     setLoading(true);
     setError("");
     try {
-      const res = await fetch("/api/words", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playedWords: useGameStore.getState().playedWords || [] }),
-      });
-      if (!res.ok) throw new Error("API error");
-      const wordPair = await res.json();
+      const wordPair = useGameStore.getState().popWordPair();
       startGame(wordPair);
     } catch {
       setError("Failed to fetch words. Using built-in pairs.");
       const fallback = {
         normalWord: "Eyelashes",
         imposterWord: "Eyebrows",
-        category: "Facial Features",
-        hint: "Small features found on the human face",
       };
       startGame(fallback);
     } finally {
