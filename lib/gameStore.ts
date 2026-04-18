@@ -110,13 +110,21 @@ export const useGameStore = create<GameState>()(
             const activeIds = Object.keys(state);
 
             set((currentState) => {
-              const updatedPlayers = activeIds
+              const allIds = Array.from(new Set([...activeIds, ...currentState.players.map(p => p.id)]));
+              
+              const updatedPlayers = allIds
                 .map((id) => {
                   const presenceData = state[id]?.[0] as { player?: Player } | undefined;
                   const fromPresence = presenceData?.player;
                   const existing = currentState.players.find((p) => p.id === id);
-                  if (!fromPresence && !existing) {
-                    return null;
+
+                  // Keep players even if they briefly drop to ensure persistence
+                  if (!fromPresence && existing) {
+                    // Only keep them if we're not in setup (cleanup ghost players in lobby)
+                    if (currentState.phase === "setup" && !activeIds.includes(id)) {
+                      return null;
+                    }
+                    return existing;
                   }
 
                   if (!fromPresence) {
@@ -128,20 +136,28 @@ export const useGameStore = create<GameState>()(
                   }
 
                   return {
-                    ...fromPresence,
-                    ...existing,
+                    ...existing, // Local existing state should have higher priority for things like isImposter
+                    ...fromPresence, // Presence brings online details like name
                     id,
                     name: fromPresence.name || existing.name,
+                    isHost: existing.isHost, // preserve host
+                    isImposter: existing.isImposter, // preserve secretly assigned role
+                    vote: existing.vote,
                   };
                 })
                 .filter((p): p is Player => p !== null)
                 .sort((a, b) => a.name.localeCompare(b.name));
 
               if (updatedPlayers.length > 0) {
-                updatedPlayers.forEach((p) => {
-                  p.isHost = false;
-                });
-                updatedPlayers[0].isHost = true;
+                // Ensure there's an ONLINE host, preferring the existing host if they're still around
+                const existingHost = updatedPlayers.find((p) => p.isHost && activeIds.includes(p.id));
+                if (!existingHost) {
+                  updatedPlayers.forEach((p) => { p.isHost = false; });
+                  const firstOnline = updatedPlayers.find((p) => activeIds.includes(p.id));
+                  if (firstOnline) {
+                    firstOnline.isHost = true;
+                  }
+                }
               }
 
               return { players: updatedPlayers };
@@ -425,10 +441,7 @@ export const useGameStore = create<GameState>()(
         }
 
         if (!popped) {
-          // If we ran out of unique words, just restart and pick a random one
-          stack = [...WORD_PAIRS];
-          stack.sort(() => Math.random() - 0.5);
-          popped = stack.pop()!;
+          throw new Error("No words left!");
         }
 
         set({ wordStack: stack });

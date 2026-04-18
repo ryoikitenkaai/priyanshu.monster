@@ -8,7 +8,7 @@ export default function DiscussScreen() {
   const { toggleReadyToVote, toggleChangeWord, players, wordPair, myPlayerId } = useGameStore();
 
   const me = players.find(p => p.id === myPlayerId);
-  const myWord = me?.isImposter ? wordPair?.imposterWord : wordPair?.normalWord;
+  const myWord = me ? (me.isImposter ? wordPair?.imposterWord : wordPair?.normalWord) : "Loading...";
 
   const readyCount = players.filter(p => p.readyToVote).length;
   const changeWordCount = players.filter(p => p.wantsToChangeWord).length;

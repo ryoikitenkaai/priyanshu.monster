@@ -43,12 +43,7 @@ export default function SetupScreen({ initialRoom = "" }: { initialRoom?: string
       const wordPair = useGameStore.getState().popWordPair();
       startGame(wordPair);
     } catch {
-      setError("Failed to fetch words. Using built-in pairs.");
-      const fallback = {
-        normalWord: "Eyelashes",
-        imposterWord: "Eyebrows",
-      };
-      startGame(fallback);
+      setError("Ran out of words! Restart game to play more.");
     } finally {
       setLoading(false);
     }
