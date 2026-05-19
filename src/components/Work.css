@@ -1,0 +1,229 @@
+/* ── WORK — Revision 3 ── */
+
+.work {
+  background: var(--cream);
+}
+
+.work__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(13,13,13,0.12);
+}
+
+.work__heading {
+  font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+}
+
+.work__list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(13,13,13,0.14);
+}
+
+/* ── ITEM WRAPPER ── */
+.work-item {
+  border-bottom: 1px solid rgba(13,13,13,0.14);
+  overflow: hidden;
+  transition: background 0.25s ease;
+}
+
+.work-item--open {
+  background: var(--black);
+}
+
+/* ── ROW BUTTON ── */
+.work-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  height: 100px;
+  padding: 0;
+  text-align: left;
+  cursor: none;
+  background: transparent;
+  color: inherit;
+  transition: padding-left 0.22s ease;
+}
+
+.work-item:not(.work-item--open):hover .work-row {
+  padding-left: 1.2rem;
+}
+
+.work-item--open .work-row {
+  color: var(--cream);
+}
+
+.work-row__id {
+  flex-shrink: 0;
+  width: 6rem;
+  transition: color 0.25s ease;
+}
+
+.work-item--open .work-row__id {
+  color: var(--green);
+  opacity: 1;
+}
+
+.work-row__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+.work-row__desc {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  opacity: 0.42;
+  flex-shrink: 0;
+  max-width: 26rem;
+  text-align: right;
+  line-height: 1.5;
+  transition: opacity 0.25s ease;
+}
+
+.work-item--open .work-row__desc {
+  opacity: 0.35;
+}
+
+.work-row__year {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  opacity: 0.35;
+  flex-shrink: 0;
+}
+
+.work-row__tog {
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  color: var(--green);
+  flex-shrink: 0;
+  width: 2rem;
+  text-align: right;
+  line-height: 1;
+}
+
+/* ── EXPANDED PANEL ── */
+.work-panel {
+  overflow: hidden;
+  transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.work-panel__inner {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  border-top: 1px solid rgba(244,239,228,0.1);
+}
+
+.work-panel__img-wrap {
+  height: 280px;
+  overflow: hidden;
+  position: relative;
+}
+
+.work-panel__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  filter: brightness(0.85) contrast(1.06);
+  transition: transform 0.55s ease;
+}
+
+.work-item--open:hover .work-panel__img {
+  transform: scale(1.03);
+}
+
+.work-panel__details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 2rem 2.5rem;
+  justify-content: center;
+  border-left: 1px solid rgba(244,239,228,0.1);
+}
+
+.work-panel__id {
+  color: var(--green);
+  opacity: 1;
+}
+
+.work-panel__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--cream);
+  line-height: 1.1;
+}
+
+.work-panel__desc {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--cream);
+  opacity: 0.42;
+  line-height: 1.7;
+}
+
+.work-panel__tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+}
+
+.work-panel__tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid rgba(44,95,46,0.65);
+  padding: 0.22rem 0.6rem;
+}
+
+.work-panel__link {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream);
+  border-bottom: 1px solid rgba(244,239,228,0.3);
+  padding-bottom: 2px;
+  width: fit-content;
+  margin-top: 0.5rem;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.work-panel__link:hover {
+  color: var(--green);
+  border-color: var(--green);
+}
+
+@media (max-width: 768px) {
+  .work-row {
+    height: auto;
+    min-height: 80px;
+    flex-wrap: wrap;
+    padding: 1.2rem 0;
+    gap: 0.75rem;
+  }
+
+  .work-row__desc { display: none; }
+
+  .work-panel__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .work-panel__img-wrap { height: 220px; }
+}

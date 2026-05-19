@@ -1,0 +1,395 @@
+/* ═══════════════════════════════════
+   HERO — Revision 4 — No portrait
+   Graphic-first, typographic focus
+   ═══════════════════════════════════ */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--cream);
+  overflow: hidden;
+}
+
+/* ── BODY: 60/40 split ── */
+.hero__body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 60% 40%;
+  border-bottom: 1px solid var(--black);
+  min-height: 0;
+}
+
+/* ───────────────────────────────
+   LEFT — pure typography
+─────────────────────────────── */
+.hero__left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;      /* anchor to bottom */
+  padding: 2.5rem var(--site-pad) 3rem;
+  border-right: 1px solid var(--black);
+  gap: 1.5rem;
+  position: relative;
+}
+
+/* ── QUOTE BLOCK — top-left of left panel ── */
+.hero__quote-block {
+  position: absolute;
+  top: 2.2rem;
+  left: var(--site-pad);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.hero__quote-mark {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: var(--green);
+  line-height: 0.7;
+  opacity: 0.55;
+  flex-shrink: 0;
+}
+
+.hero__quote-text {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--black);
+  border-left: 2px solid var(--green);
+  padding-left: 0.65rem;
+  opacity: 0.55;
+}
+
+.hero__quote-text em {
+  font-style: italic;
+  color: var(--green);
+  opacity: 1;
+}
+
+/* ── DECORATIVE BACKGROUND LAYER ── */
+.hero__deco {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+/* Ghost "PURE CREATIVITY" watermark */
+.hero__watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(4.5rem, 9vw, 8.5rem);
+  line-height: 0.88;
+  letter-spacing: -3px;
+  text-transform: uppercase;
+  text-align: center;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(13, 13, 13, 0.07);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* SVG line-art graphic */
+.hero__deco-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* All text content must render above the deco layer */
+.hero__eyebrow,
+.hero__name,
+.hero__sub,
+.hero__actions {
+  position: relative;
+  z-index: 1;
+}
+
+/* Available dot + label */
+.hero__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  font-weight: 500;
+}
+
+.hero__eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  flex-shrink: 0;
+  animation: dot-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+/* MASSIVE name — two lines */
+.hero__name {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.88;
+  gap: 0;
+}
+
+.hero__name-row {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 9.5vw, 9rem);
+  font-weight: 900;
+  letter-spacing: -4px;
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+/* "KUMAR" — outlined */
+.hero__name-outline {
+  color: transparent;
+  -webkit-text-stroke: 2.5px var(--black);
+}
+
+/* Tagline */
+.hero__sub {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--black);
+  opacity: 0.45;
+  letter-spacing: 0.02em;
+}
+
+/* CTA buttons */
+.hero__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.hero__btn-primary {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--cream);
+  background: var(--black);
+  padding: 0.9rem 2.2rem;
+  border: 2px solid var(--black);
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.hero__btn-primary:hover {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.hero__btn-ghost {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--black);
+  border-bottom: 1px solid rgba(13,13,13,0.3);
+  padding-bottom: 2px;
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+
+.hero__btn-ghost:hover {
+  color: var(--green);
+  border-color: var(--green);
+}
+
+/* ───────────────────────────────
+   RIGHT — blueprint graphic panel
+─────────────────────────────── */
+.hero__right {
+  position: relative;
+  overflow: hidden;
+  background: var(--cream-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+}
+
+/* Dot-grid fills the whole right bg */
+.hero__grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(13,13,13,0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Image is now a contained, framed element */
+.hero__graphic-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 1 / 1;
+  border: 1px solid rgba(13,13,13,0.2);
+  overflow: hidden;
+  z-index: 2;
+  background: var(--cream);
+}
+
+.hero__graphic {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  opacity: 0.92;
+  mix-blend-mode: multiply;
+  transition: transform 0.6s ease;
+}
+
+.hero__graphic-wrap:hover .hero__graphic {
+  transform: scale(1.03);
+}
+
+/* Corner labels — sit above image wrap */
+.hero__corner {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--black);
+  opacity: 0.28;
+  z-index: 3;
+}
+
+.hero__corner--tl {
+  top: 1rem;
+  left: 1.25rem;
+}
+
+.hero__corner--br {
+  bottom: 1rem;
+  right: 1.25rem;
+}
+
+/* ───────────────────────────────
+   STATS STRIP — bottom
+─────────────────────────────── */
+.hero__strip {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 var(--site-pad);
+  flex-shrink: 0;
+}
+
+.hero__stat {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding-right: 2.5rem;
+  flex-shrink: 0;
+}
+
+.hero__stat-n {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: var(--black);
+  line-height: 1;
+}
+
+.hero__stat-l {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--black);
+  opacity: 0.4;
+  max-width: 5.5rem;
+  line-height: 1.4;
+}
+
+/* Vertical rule */
+.hero__vr {
+  width: 1px;
+  height: 32px;
+  background: var(--black);
+  opacity: 0.14;
+  flex-shrink: 0;
+  margin-right: 2.5rem;
+}
+
+/* Pushes tags to the right */
+.hero__vr--push {
+  margin-left: auto;
+  margin-right: 1.5rem;
+}
+
+/* Tech tags */
+.hero__tags {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.hero__tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid rgba(44,95,46,0.55);
+  padding: 0.22rem 0.6rem;
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.hero__tag:hover {
+  background: var(--green);
+  color: var(--cream);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .hero__body { grid-template-columns: 55% 45%; }
+  .hero__name-row { font-size: clamp(4rem, 9vw, 8rem); }
+}
+
+@media (max-width: 768px) {
+  .hero__body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 280px;
+  }
+  .hero__left {
+    border-right: none;
+    border-bottom: 1px solid var(--black);
+    padding: 2.5rem var(--site-pad) 2.5rem;
+  }
+  .hero__name-row { font-size: clamp(3.5rem, 14vw, 6rem); letter-spacing: -3px; }
+  .hero__name-outline { -webkit-text-stroke-width: 2px; }
+  .hero__strip { height: auto; padding: 1.2rem var(--site-pad); flex-wrap: wrap; gap: 1rem; }
+  .hero__vr--push { display: none; }
+  .hero__tags { flex-wrap: wrap; }
+}

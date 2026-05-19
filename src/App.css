@@ -1,0 +1,111 @@
+/* ── APP LEVEL ── */
+#root {
+  min-height: 100vh;
+  position: relative;
+}
+
+/* ══════════════════════════════════════════════
+   GLOBAL BACKGROUND CANVAS
+   Sits below everything, fixed, pointer-events none
+   ══════════════════════════════════════════════ */
+.bg-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* ── Ambient gradient orbs ──
+   Very low opacity — just a breath of warmth.
+   They drift slowly via keyframe transforms.    */
+.bg-orb {
+  position: absolute;
+  border-radius: 50% !important; /* override global reset */
+  filter: blur(80px);
+  opacity: 0;                     /* set per-orb below */
+}
+
+.bg-orb--1 {
+  width: 600px;
+  height: 600px;
+  top: -150px;
+  right: -100px;
+  background: radial-gradient(circle, rgba(44,95,46,0.09) 0%, transparent 70%);
+  opacity: 1;
+  animation: orb-drift-1 22s ease-in-out infinite alternate;
+}
+
+.bg-orb--2 {
+  width: 500px;
+  height: 500px;
+  bottom: 20%;
+  left: -80px;
+  background: radial-gradient(circle, rgba(44,95,46,0.06) 0%, transparent 70%);
+  opacity: 1;
+  animation: orb-drift-2 28s ease-in-out infinite alternate;
+}
+
+.bg-orb--3 {
+  width: 400px;
+  height: 400px;
+  top: 55%;
+  right: 25%;
+  background: radial-gradient(circle, rgba(13,13,13,0.04) 0%, transparent 70%);
+  opacity: 1;
+  animation: orb-drift-3 35s ease-in-out infinite alternate;
+}
+
+@keyframes orb-drift-1 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-60px, 80px) scale(1.1); }
+}
+@keyframes orb-drift-2 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(50px, -70px) scale(0.9); }
+}
+@keyframes orb-drift-3 {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(40px, 60px) scale(1.05); }
+}
+
+/* ── Watermark — "Peak Creativity" ──
+   Repeating diagonal text, barely visible        */
+.bg-watermark {
+  position: absolute;
+  inset: -50%;              /* overflow so it tiles everywhere */
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 4rem 5rem;
+  transform: rotate(-32deg);
+  pointer-events: none;
+}
+
+.bg-watermark__text {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--black);
+  opacity: 0.028;           /* extremely subtle — watermark level */
+  white-space: nowrap;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Main content stacks above bg-canvas */
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* Navbar must be above canvas too */
+header {
+  position: relative;
+  z-index: 1000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-orb { animation: none; }
+}

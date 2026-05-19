@@ -1,0 +1,123 @@
+/* ── NAVBAR — Revision 3 ── */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--cream);
+  border-bottom: 1px solid var(--black);
+  transition: background-color 0.4s ease, backdrop-filter 0.4s ease;
+}
+
+.navbar--scrolled {
+  background-color: rgba(244, 239, 228, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--site-pad);
+  height: 56px;
+  max-width: var(--site-width);
+  margin: 0 auto;
+}
+
+/* Brand */
+.navbar__brand {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--black);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Brand green dot */
+.navbar__brand::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--green);
+  display: inline-block;
+  flex-shrink: 0;
+  animation: brand-pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes brand-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Nav links group */
+.navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.navbar__link {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--black);
+  position: relative;
+  opacity: 0.65;
+  transition: opacity 0.2s ease;
+}
+
+.navbar__link:hover {
+  opacity: 1;
+}
+
+.navbar__link::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--green);
+  transition: width 0.22s ease;
+}
+
+.navbar__link:hover::after {
+  width: 100%;
+}
+
+/* CTA */
+.navbar__cta {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--black);
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--black);
+  transition: background 0.2s ease, border-color 0.2s ease;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar__cta:hover {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+/* Navbar full-width border — no inner padding constraint */
+.navbar > .navbar__inner {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .navbar__link { display: none; }
+  .navbar__nav  { gap: 1rem; }
+}
