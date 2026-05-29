@@ -20,7 +20,7 @@ function TerminalGraphic() {
     { indent: true, k: 'role:', rest: " 'Freelance Developer'," },
     { indent: true, k: 'stack:', rest: " ['Python', 'React', 'FastAPI']," },
     { indent: true, k: 'cloud:', rest: " ['Azure', 'KVM', 'Docker']," },
-    { indent: true, k: 'degree:', rest: " 'B.Tech CSE — LPU'," },
+    { indent: true, k: 'degree:', rest: " 'B.Tech CSE'," },
     { indent: true, k: 'available:', rest: ' true,' },
     { k: '};', rest: '' },
     { k: '', rest: '' },
@@ -80,9 +80,8 @@ export default function About() {
           {/* RIGHT — bio + skills + stats */}
           <div className="about__col-right">
             <p className="about__bio">
-              I&apos;m Priyanshu Kumar — a freelance developer and B.Tech CSE graduate
-              from Lovely Professional University. I specialise in cloud infrastructure,
-              backend systems, and full-stack web applications.
+              I&apos;m Priyanshu Kumar — a freelance developer specialising in cloud
+              infrastructure, backend systems, and full-stack web applications.
             </p>
             <p className="about__bio">
               I&apos;ve built multi-tenant CRM platforms on Azure, automated AI video pipelines

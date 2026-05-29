@@ -139,7 +139,7 @@ export default function Hero() {
 
           <span className="hero__eyebrow">
             <span className="hero__eyebrow-dot" aria-hidden="true" />
-            Freelance Developer · B.Tech CSE · LPU
+            Freelance Developer · Full-Stack & Cloud
           </span>
 
           <h1 className="hero__name">
