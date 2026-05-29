@@ -125,7 +125,7 @@
 }
 
 .work-panel__img-wrap {
-  height: 280px;
+  height: 340px;
   overflow: hidden;
   position: relative;
 }
@@ -169,10 +169,24 @@
 
 .work-panel__desc {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--cream);
   opacity: 0.42;
-  line-height: 1.7;
+  line-height: 1.75;
+  margin-bottom: 0.25rem;
+}
+
+.work-panel__role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--cream);
+  opacity: 0.55;
+  margin-bottom: 0.25rem;
+}
+
+.work-panel__role-label {
+  color: var(--green);
+  opacity: 1;
 }
 
 .work-panel__tech {
@@ -225,5 +239,5 @@
     grid-template-columns: 1fr;
   }
 
-  .work-panel__img-wrap { height: 220px; }
+  .work-panel__img-wrap { height: 200px; }
 }

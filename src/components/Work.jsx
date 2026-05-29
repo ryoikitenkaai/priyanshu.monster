@@ -3,31 +3,46 @@ import './Work.css';
 
 const PROJECTS = [
   {
-    id: 'PRJ/01',
+    id:   'PRJ/01',
     year: '2024',
-    name: 'crm_az',
-    descriptor: 'Multi-tenant CRM · Azure · FastAPI · React',
-    tech: ['Azure', 'FastAPI', 'React', 'PostgreSQL', 'Docker', 'Celery'],
+    name: 'CRM Platform',
+    short: 'Multi-tenant SaaS · AI Automation · WhatsApp',
+    tech: ['Azure', 'FastAPI', 'React', 'PostgreSQL', 'Docker', 'Celery', 'WhatsApp API', 'AI/ML'],
     image: '/images/project-crm.png',
-    href: 'https://github.com/priyanshu-kumar',
+    href:  'https://github.com/priyanshu-kumar',
+    role:  'Lead Developer & Cloud Architect',
+    detail: [
+      'Enterprise-grade multi-tenant CRM built on Azure, serving multiple organisations from a single deployment with complete data isolation via row-level RBAC.',
+      'Integrated AI assistant that auto-suggests follow-up actions, drafts outreach scripts, and flags at-risk leads. WhatsApp Business API enables two-way messaging directly within the contact timeline.',
+    ],
   },
   {
-    id: 'PRJ/02',
+    id:   'PRJ/02',
     year: '2024',
     name: 'Vrihi',
-    descriptor: 'AI Video Generator · Python · Manim · FFmpeg',
-    tech: ['Python', 'Manim', 'FFmpeg', 'AI/ML', 'CLI'],
+    short: 'AI Video Generator · Python · Manim · FFmpeg',
+    tech: ['Python', 'Manim', 'FFmpeg', 'Stable Diffusion', 'Whisper', 'CLI', 'AI/ML'],
     image: '/images/project-vrihi.png',
-    href: 'https://github.com/priyanshu-kumar',
+    href:  'https://github.com/priyanshu-kumar',
+    role:  'AI Pipeline Engineer',
+    detail: [
+      'End-to-end AI video generation pipeline that converts a topic or script into a fully rendered, narrated educational video — no manual editing required.',
+      'Uses Manim for mathematical animations, Stable Diffusion for scene visuals, and Whisper for TTS narration. FFmpeg encodes the final output at broadcast quality.',
+    ],
   },
   {
-    id: 'PRJ/03',
+    id:   'PRJ/03',
     year: '2023',
     name: 'CloudStack Lab',
-    descriptor: 'KVM Homelab · Apache CloudStack · Ubuntu',
-    tech: ['KVM', 'Apache CloudStack', 'Ubuntu', 'Networking', 'NFS'],
+    short: 'Private Cloud · KVM · Apache CloudStack · Ubuntu',
+    tech: ['KVM', 'Apache CloudStack', 'Ubuntu', 'NFS', 'Networking', 'Terraform'],
     image: '/images/project-cloudstack.png',
-    href: 'https://github.com/priyanshu-kumar',
+    href:  'https://github.com/priyanshu-kumar',
+    role:  'Infrastructure Architect',
+    detail: [
+      'Self-hosted private cloud built from bare metal — two KVM hypervisor nodes managed by Apache CloudStack, with NFS shared storage and full VLAN network segmentation.',
+      'Provisioned infrastructure-as-code via Terraform, supporting live VM migration, snapshot management, and isolated tenant networking — a full AWS-like stack, on-premises.',
+    ],
   },
 ];
 
@@ -55,11 +70,11 @@ export default function Work() {
                 className="work-row"
                 onClick={() => setActive(active === i ? null : i)}
                 aria-expanded={active === i}
-                aria-label={`${p.name} — ${p.descriptor}`}
+                aria-label={`${p.name} — ${p.short}`}
               >
                 <span className="work-row__id section-eyebrow">{p.id}</span>
                 <span className="work-row__name">{p.name}</span>
-                <span className="work-row__desc">{p.descriptor}</span>
+                <span className="work-row__desc">{p.short}</span>
                 <span className="work-row__year">{p.year}</span>
                 <span className="work-row__tog" aria-hidden="true">
                   {active === i ? '−' : '+'}
@@ -69,7 +84,7 @@ export default function Work() {
               {/* ── Panel ── */}
               <div
                 className="work-panel"
-                style={{ maxHeight: active === i ? '400px' : '0' }}
+                style={{ maxHeight: active === i ? '520px' : '0' }}
                 aria-hidden={active !== i}
               >
                 <div className="work-panel__inner">
@@ -84,9 +99,14 @@ export default function Work() {
                   </div>
                   {/* Right — details */}
                   <div className="work-panel__details">
-                    <span className="work-panel__id section-eyebrow">{p.id}</span>
+                    <span className="work-panel__id section-eyebrow">{p.id} — {p.year}</span>
                     <h3 className="work-panel__title">{p.name}</h3>
-                    <p className="work-panel__desc">{p.descriptor}</p>
+                    <p className="work-panel__role">
+                      <span className="work-panel__role-label">Role:</span> {p.role}
+                    </p>
+                    {p.detail.map((d, di) => (
+                      <p key={di} className="work-panel__desc">{d}</p>
+                    ))}
                     <div className="work-panel__tech">
                       {p.tech.map((t) => (
                         <span key={t} className="work-panel__tag">{t}</span>
