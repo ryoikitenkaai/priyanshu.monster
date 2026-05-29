@@ -16,25 +16,25 @@ const SKILLS = [
 const TEAMS = [
   {
     id: '01',
+    tag: 'DEV & CLOUD',
+    name: 'Priyanshu Kumar',
+    desc: 'Full-stack development, cloud infrastructure on Azure & KVM, backend architecture, DevOps pipelines, and production-grade deployment.',
+    color: 'blue',
+    lead: true,
+  },
+  {
+    id: '02',
     tag: 'CYBER TEAM',
     name: 'Security & Networks',
     desc: 'Penetration testing, vulnerability research, network hardening, OSINT, and security audits across infrastructure and applications.',
     color: 'red',
   },
   {
-    id: '02',
+    id: '03',
     tag: 'AI TEAM',
     name: 'Intelligent Systems',
     desc: 'AI-driven automation, video pipelines, ML model integration, and intelligent workflow engines built with Python and modern AI tooling.',
     color: 'green',
-  },
-  {
-    id: '03',
-    tag: 'DEV & CLOUD',
-    name: 'Priyanshu Kumar',
-    desc: 'Full-stack development, cloud infrastructure on Azure & KVM, backend architecture, DevOps pipelines, and production-grade deployment.',
-    color: 'blue',
-    lead: true,
   },
 ];
 
