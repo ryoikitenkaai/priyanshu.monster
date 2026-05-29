@@ -139,7 +139,7 @@ export default function Hero() {
 
           <span className="hero__eyebrow">
             <span className="hero__eyebrow-dot" aria-hidden="true" />
-            Freelance Developer · Full-Stack & Cloud
+            Cyber · AI · Dev & Cloud — We Build Together
           </span>
 
           <h1 className="hero__name">
@@ -148,7 +148,7 @@ export default function Hero() {
           </h1>
 
           <p className="hero__sub">
-            Cloud infrastructure · Backend systems · Full-stack web
+            Cloud infrastructure · AI pipelines · Cyber security · Full-stack systems
           </p>
 
           <div className="hero__actions">

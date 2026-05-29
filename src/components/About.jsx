@@ -2,24 +2,50 @@ import React from 'react';
 import './About.css';
 
 const STATS = [
-  { n: '3+',  l: 'Years',    sub: 'EXPERIENCE'  },
+  { n: '3+',  l: 'Years',    sub: 'ACTIVE'      },
   { n: '10+', l: 'Projects', sub: 'DELIVERED'   },
-  { n: '2',   l: 'Startups', sub: 'CONTRIBUTED' },
+  { n: '3',   l: 'Domains', sub: 'MASTERED'    },
 ];
 
 const SKILLS = [
   'Python', 'FastAPI', 'React', 'Azure', 'KVM',
   'Docker', 'PostgreSQL', 'Nginx', 'Celery', 'Linux',
-  'Terraform', 'Ubuntu', 'CI/CD',
+  'Terraform', 'CI/CD', 'Pen Testing', 'OSINT', 'AI/ML',
 ];
 
-/* Inline terminal graphic — real code lines */
+const TEAMS = [
+  {
+    id: '01',
+    tag: 'CYBER TEAM',
+    name: 'Security & Networks',
+    desc: 'Penetration testing, vulnerability research, network hardening, OSINT, and security audits across infrastructure and applications.',
+    color: 'red',
+  },
+  {
+    id: '02',
+    tag: 'AI TEAM',
+    name: 'Intelligent Systems',
+    desc: 'AI-driven automation, video pipelines, ML model integration, and intelligent workflow engines built with Python and modern AI tooling.',
+    color: 'green',
+  },
+  {
+    id: '03',
+    tag: 'DEV & CLOUD',
+    name: 'Priyanshu Kumar',
+    desc: 'Full-stack development, cloud infrastructure on Azure & KVM, backend architecture, DevOps pipelines, and production-grade deployment.',
+    color: 'blue',
+    lead: true,
+  },
+];
+
+/* Inline terminal graphic */
 function TerminalGraphic() {
   const lines = [
-    { k: 'const', rest: ' priyanshu = {' },
-    { indent: true, k: 'role:', rest: " 'Freelance Developer'," },
+    { k: 'const', rest: ' team = {' },
+    { indent: true, k: 'cyber:', rest: " 'Security & Networks'," },
+    { indent: true, k: 'ai:', rest: " 'Intelligent Systems'," },
+    { indent: true, k: 'cloud:', rest: " 'Dev & Cloud'," },
     { indent: true, k: 'stack:', rest: " ['Python', 'React', 'FastAPI']," },
-    { indent: true, k: 'cloud:', rest: " ['Azure', 'KVM', 'Docker']," },
     { indent: true, k: 'degree:', rest: " 'B.Tech CSE'," },
     { indent: true, k: 'available:', rest: ' true,' },
     { k: '};', rest: '' },
@@ -28,13 +54,13 @@ function TerminalGraphic() {
   ];
 
   return (
-    <div className="about__terminal" aria-label="Code representation of Priyanshu's profile">
+    <div className="about__terminal" aria-label="Code representation of the team profile">
       {/* title bar */}
       <div className="about__terminal-bar">
         <span className="about__terminal-dot about__terminal-dot--r" />
         <span className="about__terminal-dot about__terminal-dot--y" />
         <span className="about__terminal-dot about__terminal-dot--g" />
-        <span className="about__terminal-title">profile.js</span>
+        <span className="about__terminal-title">team.js</span>
       </div>
       {/* code body */}
       <div className="about__terminal-body">
@@ -47,7 +73,7 @@ function TerminalGraphic() {
         ))}
         {/* blinking cursor */}
         <div className="about__code-line about__code-line--cursor">
-          <span className="about__code-num">10</span>
+          <span className="about__code-num">11</span>
           <span className="about__cursor" aria-hidden="true">▋</span>
         </div>
       </div>
@@ -57,12 +83,12 @@ function TerminalGraphic() {
 
 export default function About() {
   return (
-    <section className="about border-thick-top border-thick-bottom" id="about" aria-label="About Priyanshu">
+    <section className="about border-thick-top border-thick-bottom" id="about" aria-label="About the team">
       <div className="section-inner">
 
         {/* Eyebrow */}
         <div className="about__eyebrow reveal">
-          <span className="section-eyebrow">04 — About Me</span>
+          <span className="section-eyebrow">04 — About the Team</span>
           <span className="about__eyebrow-rule" aria-hidden="true" />
         </div>
 
@@ -73,21 +99,21 @@ export default function About() {
             <TerminalGraphic />
 
             <blockquote className="about__quote">
-              Building systems<br />that scale,<br />not just ship.
+              We don't just ship —<br />we build systems<br />that last.
             </blockquote>
           </div>
 
           {/* RIGHT — bio + skills + stats */}
           <div className="about__col-right">
             <p className="about__bio">
-              I&apos;m Priyanshu Kumar — a freelance developer specialising in cloud
-              infrastructure, backend systems, and full-stack web applications.
+              We're a focused team of three disciplines — Cybersecurity, Artificial Intelligence,
+              and Cloud &amp; Development. Together we design, secure, and ship production-grade
+              systems that are reliable, observable, and built to scale.
             </p>
             <p className="about__bio">
-              I&apos;ve built multi-tenant CRM platforms on Azure, automated AI video pipelines
-              with Python and FFmpeg, and self-hosted private clouds using KVM and Apache
-              CloudStack. I care deeply about systems that are reliable, observable, and built
-              to last — production-ready from commit one.
+              Led by <strong>Priyanshu Kumar</strong> on the Dev &amp; Cloud side, our work spans
+              multi-tenant platforms on Azure, AI-powered automation pipelines, self-hosted private
+              clouds with KVM, and security-first infrastructure hardened by the Cyber team.
             </p>
 
             <div className="about__skills" role="list" aria-label="Technical skills">
@@ -108,6 +134,28 @@ export default function About() {
           </div>
 
         </div>
+
+        {/* ── TEAM CREDITS ── */}
+        <div className="about__teams">
+          <div className="about__teams-label">
+            <span className="section-eyebrow">The Team</span>
+            <span className="about__eyebrow-rule" aria-hidden="true" />
+          </div>
+          <div className="about__teams-grid">
+            {TEAMS.map((t) => (
+              <div key={t.id} className={`about__team-card about__team-card--${t.color}${t.lead ? ' about__team-card--lead' : ''}`}>
+                <div className="about__team-header">
+                  <span className="about__team-id section-eyebrow">{t.id}</span>
+                  <span className="about__team-tag">{t.tag}</span>
+                  {t.lead && <span className="about__team-lead-badge">Lead</span>}
+                </div>
+                <h3 className="about__team-name">{t.name}</h3>
+                <p className="about__team-desc">{t.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
       </div>
     </section>
   );

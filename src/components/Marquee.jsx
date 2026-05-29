@@ -2,7 +2,7 @@ import React from 'react';
 import './Marquee.css';
 
 const TICKER_TEXT =
-  'AVAILABLE FOR WORK · CLOUD · BACKEND · FULL-STACK · AZURE · KVM · DOCKER · ';
+  'CYBER TEAM · AI TEAM · DEV & CLOUD · AVAILABLE FOR WORK · AZURE · FULL-STACK · SECURITY · AUTOMATION · ';
 
 export default function Marquee() {
   return (

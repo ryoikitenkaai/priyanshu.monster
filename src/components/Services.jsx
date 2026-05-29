@@ -60,6 +60,19 @@ const SERVICES = [
       </svg>
     ),
   },
+  {
+    id: '05',
+    label: 'Cybersecurity',
+    title: 'Cybersecurity',
+    descriptor: 'Penetration testing, vulnerability assessment, network hardening, OSINT, and security audits. We identify threats before they find you.',
+    tech: ['Pen Testing', 'OSINT', 'Network Hardening', 'Nmap', 'Burp Suite'],
+    icon: (
+      <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" className="svc__icon" aria-hidden="true">
+        <path d="M22 5L7 12v10c0 9 6.5 17 15 19 8.5-2 15-10 15-19V12L22 5Z" stroke="currentColor" strokeWidth="1.4"/>
+        <path d="M16 22l4 4 8-8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="square"/>
+      </svg>
+    ),
+  },
 ];
 
 export default function Services() {
@@ -71,7 +84,7 @@ export default function Services() {
 
         {/* Header row */}
         <div className="services__header reveal">
-          <span className="section-eyebrow">02 — What I Do</span>
+          <span className="section-eyebrow">02 — What We Do</span>
           <h2 className="section-heading services__heading">Services</h2>
         </div>
 

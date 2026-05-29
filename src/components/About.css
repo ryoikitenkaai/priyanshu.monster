@@ -213,6 +213,96 @@
   opacity: 0.4;
 }
 
+/* ── TEAM CREDITS ── */
+.about__teams {
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid rgba(13,13,13,0.12);
+}
+
+.about__teams-label {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.about__teams-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+/* Base card */
+.about__team-card {
+  padding: 1.75rem;
+  border: 1px solid rgba(13,13,13,0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  transition: border-color 0.22s ease, transform 0.22s ease;
+}
+
+.about__team-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Accent top bar by colour */
+.about__team-card--red  { border-top: 2.5px solid #C0392B; }
+.about__team-card--green { border-top: 2.5px solid var(--green); }
+.about__team-card--blue { border-top: 2.5px solid #1A5276; }
+
+/* Lead card gets a more prominent look */
+.about__team-card--lead {
+  background: var(--cream-dark);
+  border-color: rgba(13,13,13,0.24);
+}
+
+.about__team-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.about__team-tag {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--black);
+  opacity: 0.38;
+}
+
+.about__team-lead-badge {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid rgba(44,95,46,0.5);
+  padding: 0.12rem 0.5rem;
+  margin-left: auto;
+}
+
+.about__team-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--black);
+  line-height: 1.1;
+}
+
+.about__team-desc {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.75;
+  color: var(--black);
+  opacity: 0.55;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .about__grid { grid-template-columns: 340px 1fr; gap: 3.5rem; }
@@ -222,6 +312,7 @@
   .about__grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .about__stats { grid-template-columns: repeat(3, 1fr); }
   .about__code-rest { font-size: 0.7rem; }
+  .about__teams-grid { grid-template-columns: 1fr; gap: 1rem; }
 }
 
 @media (max-width: 480px) {

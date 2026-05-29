@@ -10,11 +10,12 @@ export default function Contact() {
         <div className="contact__header-inner">
           <span className="section-eyebrow">05 — Contact</span>
           <h2 className="contact__heading">
-            Let&apos;s Build<br />
-            <span className="contact__heading-outline">Something.</span>
+            Work With
+            <br />
+            <span className="contact__heading-outline">Our Team.</span>
           </h2>
           <p className="contact__sub">
-            Available for freelance projects, consulting,<br />and long-term collaborations.
+            Reach out for projects, consulting, or long-term<br />collaborations. Our Cyber, AI &amp; Dev teams are ready.
           </p>
         </div>
         {/* Decorative grid on right */}
@@ -71,9 +72,9 @@ export default function Contact() {
       <div className="contact__footer reveal reveal-d3">
         <span className="contact__footer-name">PRIYANSHU KUMAR © 2026</span>
         <span className="contact__footer-stack">
-          React · Vite · Plain CSS · No Tailwind
+          Cyber Team · AI Team · Dev &amp; Cloud
         </span>
-        <span className="contact__footer-avail">AVAILABLE FOR FREELANCE</span>
+        <span className="contact__footer-avail">AVAILABLE FOR WORK</span>
       </div>
 
     </footer>
